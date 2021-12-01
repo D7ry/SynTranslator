@@ -89,8 +89,8 @@ namespace Translator
                     FormKey key = _rec.FormKey;
                     if (state.LinkCache.TryResolve<IIngredientGetter>(key, out var rec) && _rec.Name != null)
                     { 
-                        var tranPatch = state.PatchMod.Ingredients.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
+                        var transPatch = state.PatchMod.Ingredients.GetOrAddAsOverride(rec);
+                        transPatch.Name = _rec.Name.ToString();
                         i++;
                         if (verboseLog)
                         {
@@ -103,8 +103,8 @@ namespace Translator
                     FormKey key = _rec.FormKey;
                     if (state.LinkCache.TryResolve<INpcGetter>(key, out var rec) && _rec.Name != null)
                     {
-                        var tranPatch = state.PatchMod.Npcs.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
+                        var transPatch = state.PatchMod.Npcs.GetOrAddAsOverride(rec);
+                        transPatch.Name = _rec.Name.ToString();
                         i++;
                         if (verboseLog)
                         {
@@ -117,8 +117,8 @@ namespace Translator
                     FormKey key = _rec.FormKey;
                     if (state.LinkCache.TryResolve<IWorldspaceGetter>(key, out var rec) && _rec.Name != null)
                     {
-                        var tranPatch = state.PatchMod.Worldspaces.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
+                        var transPatch = state.PatchMod.Worldspaces.GetOrAddAsOverride(rec);
+                        transPatch.Name = _rec.Name.ToString();
                         i++;
                         if (verboseLog)
                         {
@@ -129,10 +129,10 @@ namespace Translator
                 foreach (var _rec in esp.MagicEffects)
                 {
                     FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IWorldspaceGetter>(key, out var rec) && _rec.Name != null)
+                    if (state.LinkCache.TryResolve<IMagicEffectGetter>(key, out var rec) && _rec.Name != null)
                     {
-                        var tranPatch = state.PatchMod.Worldspaces.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
+                        var transPatch = state.PatchMod.MagicEffects.GetOrAddAsOverride(rec);
+                        transPatch.Name = _rec.Name.ToString();
                         i++;
                         if (verboseLog)
                         {
@@ -140,10 +140,7 @@ namespace Translator
                         }
                     }
                 }
-                foreach (var mgef in esp.MagicEffects)
-                {
-                    //Console.WriteLine("Magic effect: " + mgef.Name);
-                }
+
                 //state.LoadOrder.PriorityOrder.SkyrimMajorRecord().WinningContextOverrides(state.LinkCache).ForEach(obj =>
                 //{
                     //var record = obj.Record;
