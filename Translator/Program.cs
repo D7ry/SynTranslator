@@ -30,6 +30,7 @@ namespace Translator
         }
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
+            verboseLog = Settings.Value.verboseLog;
             if (Settings.Value.forwardSelectedLOMods)
             {
                 Console.WriteLine("forwarding selected mods within LO");
@@ -44,7 +45,6 @@ namespace Translator
             void forwardOutsideTrans()
             {
                 var translationDir = Settings.Value.translationDir;
-                verboseLog = Settings.Value.verboseLog;
                 List<String> pluginLst = Settings.Value.outsidePlugins;
                 if (translationDir == "")
                 {
@@ -60,22 +60,33 @@ namespace Translator
                     String fileName = pluginLst[i];
                     if (fileName.Contains(".esp") || fileName.Contains(".esm") || fileName.Contains(".esl"))
                     {
-                        Console.WriteLine("processing translation from " + fileName);
                         String espPath = $"{translationDir}/{fileName}";
                         SkyrimMod esp = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
                         espCopy(esp);
                     }
                     else
                     {
-                        Console.WriteLine("Error: wrong plugin name format; aborting process.");
-                        return;
+                        Console.WriteLine("Waring: wrong plugin name format, should be [plugin].esp, [plugin].esm, or [plugin].esl");
                     }
                 }
             }
 
             void forwardLOTrans()
             {
-
+                List<ModKey> plugins = Settings.Value.LOPlugins;
+                if (plugins.Count == 0)
+                {
+                    Console.WriteLine("Warning: must have at least one plugin in load order to begin forwarding records");
+                    return;
+                }
+                for (int i = 0; i < plugins.Count; i++)
+                {
+                    var plugin = state.LoadOrder[plugins[i]].Mod;
+                    if (plugin != null)
+                    {
+                        espCopy(plugin);
+                    }
+                }
             }
             
 
@@ -83,8 +94,9 @@ namespace Translator
             //copy stuff that need to be translated into Synthesis.esp
             //condition check:
             //iff stuff with corresponding formID doens't exist, skip it.
-            void espCopy(ISkyrimMod esp)
+            void espCopy(ISkyrimModGetter esp)
             {
+                Console.WriteLine($"forwarding transation from {esp.ModKey}");
                 int k = 0;
                 if (Settings.Value.weapon)
                 {
@@ -660,30 +672,7 @@ namespace Translator
 
             }
 
-
-
-            System.Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-
-
-            uint count = 0;
-                // For every Npc that exists
-            foreach (var npc in state.LoadOrder.PriorityOrder.Npc().WinningOverrides())
-            {
-                // For every Npc group in our target mods, in order
-                //Console.WriteLine("NPC NAME: " + npc.Name);
-            }
-            foreach (var worldSpace in state.LoadOrder.PriorityOrder.Worldspace().WinningOverrides())
-            {
-                //var worldCopy = worldSpace.DeepCopy();
-                //Console.WriteLine(worldCopy.Name);
-            }
-            foreach (var weapon in state.LoadOrder.PriorityOrder.Weapon().WinningOverrides())
-            {
-                //var weaponCopy = weapon.DeepCopy();
-                //Console.WriteLine(weaponCopy.Name);
-            }
-
-            System.Console.WriteLine($"Translated {i} records.");
+            System.Console.WriteLine($"Translated {i} records in total.");
         }
     }
 }
