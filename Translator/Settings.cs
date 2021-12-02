@@ -7,9 +7,14 @@ namespace Translator
 {
     public record Settings
     {
-        //public List<ModKey> TargetMods = new List<ModKey>();
         public bool verboseLog = false;
+        public List<ModKey> LOPlugins = new List<ModKey>();
+        public List<String> outsidePlugins = new List<string>();
         public string translationDir = "";
+        
+
+        public bool forwardSelectedLOMods = false;
+        public bool forwardOutsideMods = false;
 
         public bool weapon = true;
         public bool armor = true;
@@ -25,8 +30,6 @@ namespace Translator
         public bool perk = true;
 
         public bool quest = true;
-        
-
         
         public bool hazard = true;
         public bool message = true;

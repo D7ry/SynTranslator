@@ -30,32 +30,62 @@ namespace Translator
         }
         public static void RunPatch(IPatcherState<ISkyrimMod, ISkyrimModGetter> state)
         {
-            var translationDir = Settings.Value.translationDir;
-            verboseLog = Settings.Value.verboseLog;
-            if (translationDir == "")
+            if (Settings.Value.forwardSelectedLOMods)
             {
-                Console.WriteLine("Error: Translation Dir must be a valid directory!");
-                return;
+                Console.WriteLine("forwarding selected mods within LO");
+                forwardLOTrans();
             }
-            foreach(String file in Directory.GetFiles(translationDir))
+            if (Settings.Value.forwardOutsideMods)
             {
-                if (Path.GetExtension(file) == ".esp")
+                Console.WriteLine("forwarding selected mods from translation directory");
+                forwardOutsideTrans();
+            }
+
+            void forwardOutsideTrans()
+            {
+                var translationDir = Settings.Value.translationDir;
+                verboseLog = Settings.Value.verboseLog;
+                List<String> pluginLst = Settings.Value.outsidePlugins;
+                if (translationDir == "")
                 {
-                    espCopy(file);
-                } else
+                    Console.WriteLine("Warning: translation directory not set; please manually input translation directory path!");
+                }
+                if (pluginLst.Count == 0)
                 {
-                    Console.WriteLine(file + " is not an esp!");
+                    Console.WriteLine("Warning: no plugin found in translation list; please manually input plugin name!");
+                }
+
+                for (int i = 0; i < pluginLst.Count; i++)
+                {
+                    String fileName = pluginLst[i];
+                    if (fileName.Contains(".esp") || fileName.Contains(".esm") || fileName.Contains(".esl"))
+                    {
+                        Console.WriteLine("processing translation from " + fileName);
+                        String espPath = $"{translationDir}/{fileName}";
+                        SkyrimMod esp = SkyrimMod.CreateFromBinary(espPath, SkyrimRelease.SkyrimSE);
+                        espCopy(esp);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Error: wrong plugin name format; aborting process.");
+                        return;
+                    }
                 }
             }
+
+            void forwardLOTrans()
+            {
+
+            }
+            
+
 
             //copy stuff that need to be translated into Synthesis.esp
             //condition check:
             //iff stuff with corresponding formID doens't exist, skip it.
-            void espCopy(String espPath)
+            void espCopy(ISkyrimMod esp)
             {
-                Console.WriteLine("processing translation from " + espPath);
                 int k = 0;
-                using var esp = SkyrimMod.CreateFromBinaryOverlay(espPath, SkyrimRelease.SkyrimSE);
                 if (Settings.Value.weapon)
                 {
                     foreach (var _rec in esp.Weapons)
@@ -203,7 +233,6 @@ namespace Translator
                 }
                 if (Settings.Value.cell)
                 {
-                    //FIXME!!
                 } //FIXME
                 if (Settings.Value.container)
                 {
@@ -442,7 +471,20 @@ namespace Translator
                 }
                 if (Settings.Value.dialogueTopic)
                 {
-
+                    foreach (var _rec in esp.DialogTopics)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IDialogTopicGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.DialogTopics.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated dialogue topic: {rec.Name}");
+                            }
+                        }
+                    }
                 } //FIXME
                 if (Settings.Value.door)
                 {
@@ -606,7 +648,7 @@ namespace Translator
                     }
                 }
                 
-                System.Console.WriteLine($"translated {k} records from {espPath}");
+                System.Console.WriteLine($"translated {k} records");
 
                 
                 //state.LoadOrder.PriorityOrder.SkyrimMajorRecord().WinningContextOverrides(state.LinkCache).ForEach(obj =>
