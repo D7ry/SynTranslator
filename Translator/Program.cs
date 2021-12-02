@@ -384,7 +384,229 @@ namespace Translator
                         }
                     }
                 }
-                System.Console.WriteLine($"translted {k} records from {espPath}");
+                if (Settings.Value.ingestible)
+                {
+                    foreach (var _rec in esp.Ingestibles)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IIngestibleGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Ingestibles.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated ingestible: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.ActorValueInformation)
+                {
+                    foreach (var _rec in esp.ActorValueInformation)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IActorValueInformationGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.ActorValueInformation.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.Description != null)
+                            {
+                                transPatch.Description = _rec.Description.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated actor value information: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.book)
+                {
+                    foreach (var _rec in esp.Books)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IBookGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Books.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            transPatch.BookText = _rec.BookText.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated book: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.dialogueTopic)
+                {
+
+                } //FIXME
+                if (Settings.Value.door)
+                {
+                    foreach (var _rec in esp.Doors)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IDoorGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Doors.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated door: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.flora)
+                {
+                    foreach (var _rec in esp.Florae)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IFloraGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Florae.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.ActivateTextOverride != null)
+                            {
+                                transPatch.ActivateTextOverride = _rec.ActivateTextOverride.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated flora: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.tree)
+                {
+                    foreach (var _rec in esp.Trees)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<ITreeGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Trees.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated tree: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.furniture)
+                {
+                    foreach (var _rec in esp.Furniture)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IFurnitureGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Furniture.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated furniture: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.key)
+                {
+                    foreach (var _rec in esp.Keys)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IKeyGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Keys.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated key: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.location)
+                {
+                    foreach (var _rec in esp.Locations)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<ILocationGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Locations.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated key: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.miscItem)
+                {
+                    foreach (var _rec in esp.MiscItems)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IMiscItemGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.MiscItems.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated misc item: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.shout)
+                {
+                    foreach (var _rec in esp.Shouts)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IShoutGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Shouts.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.Description != null)
+                            {
+                                transPatch.Description = _rec.Description.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated shout: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.soulGem)
+                {
+                    foreach (var _rec in esp.SoulGems)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<ISoulGemGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.SoulGems.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated soul gem: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                
+                System.Console.WriteLine($"translated {k} records from {espPath}");
 
                 
                 //state.LoadOrder.PriorityOrder.SkyrimMajorRecord().WinningContextOverrides(state.LinkCache).ForEach(obj =>
