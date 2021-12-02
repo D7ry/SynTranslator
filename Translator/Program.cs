@@ -53,94 +53,340 @@ namespace Translator
             //iff stuff with corresponding formID doens't exist, skip it.
             void espCopy(String espPath)
             {
-
                 Console.WriteLine("processing translation from " + espPath);
+                int k = 0;
                 using var esp = SkyrimMod.CreateFromBinaryOverlay(espPath, SkyrimRelease.SkyrimSE);
-                foreach (var _rec in esp.Weapons)
+                if (Settings.Value.weapon)
                 {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IWeaponGetter>(key, out var rec) && _rec.Name != null)
+                    foreach (var _rec in esp.Weapons)
                     {
-                        var tranPatch = state.PatchMod.Weapons.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IWeaponGetter>(key, out var rec))
                         {
-                            Console.WriteLine($"translated {rec.Name}");
+                            var transPatch = state.PatchMod.Weapons.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated weapon: {rec.Name}");
+                            }
                         }
                     }
                 }
-                foreach(var _rec in esp.Armors)
+                if (Settings.Value.armor)
                 {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IArmorGetter>(key, out var rec) && _rec.Name != null)
+                    foreach (var _rec in esp.Armors)
                     {
-                        var tranPatch = state.PatchMod.Armors.GetOrAddAsOverride(rec);
-                        tranPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IArmorGetter>(key, out var rec))
                         {
-                            Console.WriteLine($"translated {rec.Name}");
+                            var transPatch = state.PatchMod.Armors.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated armor: {rec.Name}");
+                            }
                         }
                     }
                 }
-                foreach(var _rec in esp.Ingredients)
+                if (Settings.Value.ingredient)
                 {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IIngredientGetter>(key, out var rec) && _rec.Name != null)
-                    { 
-                        var transPatch = state.PatchMod.Ingredients.GetOrAddAsOverride(rec);
-                        transPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
-                        {
-                            Console.WriteLine($"translated {rec.Name}");
-                        }
-                    }
-                }
-                foreach (var _rec in esp.Npcs)
-                {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<INpcGetter>(key, out var rec) && _rec.Name != null)
+                    foreach (var _rec in esp.Ingredients)
                     {
-                        var transPatch = state.PatchMod.Npcs.GetOrAddAsOverride(rec);
-                        transPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IIngredientGetter>(key, out var rec))
                         {
-                            Console.WriteLine($"translated {rec.Name}");
+                            var transPatch = state.PatchMod.Ingredients.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated ingredient: {rec.Name}");
+                            }
                         }
                     }
                 }
-                foreach (var _rec in esp.Worldspaces)
+                if (Settings.Value.npc)
                 {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IWorldspaceGetter>(key, out var rec) && _rec.Name != null)
+                    foreach (var _rec in esp.Npcs)
                     {
-                        var transPatch = state.PatchMod.Worldspaces.GetOrAddAsOverride(rec);
-                        transPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<INpcGetter>(key, out var rec) && _rec.Name != null)
                         {
-                            Console.WriteLine($"translated {rec.Name}");
+                            var transPatch = state.PatchMod.Npcs.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated NPC name: {rec.Name}");
+                            }
                         }
                     }
                 }
-                foreach (var _rec in esp.MagicEffects)
+                if (Settings.Value.worldSpace)
                 {
-                    FormKey key = _rec.FormKey;
-                    if (state.LinkCache.TryResolve<IMagicEffectGetter>(key, out var rec) && _rec.Name != null)
+                    foreach (var _rec in esp.Worldspaces)
                     {
-                        var transPatch = state.PatchMod.MagicEffects.GetOrAddAsOverride(rec);
-                        transPatch.Name = _rec.Name.ToString();
-                        i++;
-                        if (verboseLog)
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IWorldspaceGetter>(key, out var rec))
                         {
-                            Console.WriteLine($"translated {rec.Name}");
+                            var transPatch = state.PatchMod.Worldspaces.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated world space: {rec.Name}");
+                            }
                         }
                     }
                 }
+                if (Settings.Value.magicEffect)
+                {
+                    foreach (var _rec in esp.MagicEffects)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IMagicEffectGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.MagicEffects.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.Description != null)
+                            {
+                                transPatch.Description = _rec.Description.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated magic effect: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.spell)
+                {
+                    foreach (var _rec in esp.MagicEffects)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<ISpellGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Spells.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.Description != null)
+                            {
+                                transPatch.Description = _rec.Description.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated magic effect: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.message) {
+                    foreach (var _rec in esp.Messages)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IMessageGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Messages.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            transPatch.Description = _rec.Description.ToString();
+                            transPatch.Quest = _rec.Quest.AsNullable();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated message: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.cell)
+                {
+                    //FIXME!!
+                } //FIXME
+                if (Settings.Value.container)
+                {
+                    foreach (var _rec in esp.Containers)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IContainerGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Containers.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated container: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.objectEffect)
+                {
+                    foreach (var _rec in esp.ObjectEffects)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IObjectEffectGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.ObjectEffects.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated object effect: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.hazard)
+                {
+                    foreach (var _rec in esp.Hazards)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IHazardGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Hazards.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated hazard: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.perk)
+                {
+                    foreach (var _rec in esp.Perks)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IPerkGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Perks.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            transPatch.Description = _rec.Description.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated perk: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.quest)
+                {
+                    foreach (var _rec in esp.Quests)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IQuestGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Quests.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated quest: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.activator)
+                {
+                    foreach (var _rec in esp.Activators)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IActivatorGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Activators.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.ActivateTextOverride != null)
+                            {
+                                transPatch.ActivateTextOverride = _rec.ActivateTextOverride.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated activator: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.ammunition)
+                {
+                    foreach (var _rec in esp.Ammunitions)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (state.LinkCache.TryResolve<IAmmunitionGetter>(key, out var rec) && _rec.Name != null)
+                        {
+                            var transPatch = state.PatchMod.Ammunitions.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            if (_rec.Description != null)
+                            {
+                                transPatch.Description = _rec.Description.ToString();
+                            }
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated ammunition: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.projectile)
+                {
+                    foreach (var _rec in esp.Projectiles)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IProjectileGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Projectiles.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated projectile: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.race)
+                {
+                    foreach (var _rec in esp.Races)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IRaceGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Races.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated race: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                if (Settings.Value.scroll)
+                {
+                    foreach (var _rec in esp.Scrolls)
+                    {
+                        FormKey key = _rec.FormKey;
+                        if (_rec.Name != null && state.LinkCache.TryResolve<IScrollGetter>(key, out var rec))
+                        {
+                            var transPatch = state.PatchMod.Scrolls.GetOrAddAsOverride(rec);
+                            transPatch.Name = _rec.Name.ToString();
+                            i++; k++;
+                            if (verboseLog)
+                            {
+                                Console.WriteLine($"translated scroll: {rec.Name}");
+                            }
+                        }
+                    }
+                }
+                System.Console.WriteLine($"translted {k} records from {espPath}");
 
+                
                 //state.LoadOrder.PriorityOrder.SkyrimMajorRecord().WinningContextOverrides(state.LinkCache).ForEach(obj =>
                 //{
                     //var record = obj.Record;
