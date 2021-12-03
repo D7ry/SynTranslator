@@ -1,2 +1,2 @@
-# facefixer
-Mutagen patcher for fixing npc faces.
+# SynTranslator
+Synthesis patcher to either forward or import translated records.
